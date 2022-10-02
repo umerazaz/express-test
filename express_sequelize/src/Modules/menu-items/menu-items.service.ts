@@ -1,7 +1,13 @@
+
+
+
+
+
+import MenuItem from './entities/menu-item.entity'
 export class MenuItemsService {
 
 
-    
+
   /* TODO: complete getMenuItems so that it returns a nested menu structure
     Requirements:
     - your code should result in EXACTLY one SQL query no matter the nesting level or the amount of menu items.
@@ -78,6 +84,29 @@ export class MenuItemsService {
   */
 
   async getMenuItems() {
-    throw new Error('TODO in task 3');
+    let data = await MenuItem.findAll({raw:true});
+    let response:any = [];
+    if (data && data.length > 0) {
+        for (let parent of data) {
+            if (parent.parentId == null) {
+                let children = await this.recursiveChildren(parent, data);
+                response.push(children);
+            }
+
+        }
+
+    }
+    console.log('response is here -> ',response);
+    return response;
+    // throw new Error('TODO in task 3');
   }
+  async recursiveChildren(parent:any, data:any){
+    for (let child of data){
+        if(child.parentId === parent.id){
+            parent.children.push(child)
+            this.recursiveChildren(child, data)
+        }
+    }
+    return data
+  } 
 }

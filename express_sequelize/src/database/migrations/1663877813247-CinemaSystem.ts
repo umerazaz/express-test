@@ -1,4 +1,5 @@
-import { QueryInterface } from 'sequelize';
+import { query } from 'express';
+import { QueryInterface, Sequelize, DataType } from 'sequelize';
 
 export default {
   /**
@@ -31,8 +32,115 @@ export default {
    * As a cinema owner I don't want to configure the seating for every show
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  up: (queryInterface: QueryInterface): Promise<void> => {
-    throw new Error('TODO: implement migration in task 4');
+  up: (queryInterface: QueryInterface, DataType ): Promise<void> => {
+    // return Promise.all([
+      queryInterface.createTable('Movies', {
+        id: {
+          type: 'integer',
+          primaryKey: true,
+          autoIncrement: true,
+        },
+        name:DataType.STRING,
+        startTime:DataType.INTEGER, //UNIX
+        endTime:DataType.INTEGER, //UNIX
+        isAllShowsBooked:DataType.BOOLEAN, //UNIX
+
+      })
+      queryInterface.createTable('seating', {
+        id: {
+          type: 'integer',
+          primaryKey: true,
+          autoIncrement: true,
+        },
+        type:DataType.STRING,
+        price:DataType.FLOAT, //UNIX,
+        row:DataType.INTEGER,
+        column:DataType.INTEGER,
+
+        
+      })
+      queryInterface.createTable('pricing', {
+        id: {
+          type: 'integer',
+          primaryKey: true,
+          autoIncrement: true,
+        },
+        movieId:{
+          type:DataType.INTEGER,
+          references:{
+            model:'Movie',
+            key:'id'
+          },
+        },
+        showRoomId:{
+          type:DataType.INTEGER,
+          references:{
+            model:'ShowRoom',
+            key:'id'
+          },
+        },
+        seatingId:{
+          type:DataType.INTEGER,
+          references:{
+            model:'seating',
+            key:'id'
+          },
+        },
+        type:DataType.STRING,
+        price:DataType.FLOAT, //UNIX
+        
+      })
+      queryInterface.createTable('ShowRoom', {
+        id: {
+          type: 'integer',
+          primaryKey: true,
+          autoIncrement: true,
+        },
+        name:DataType.STRING,
+        isBooked:DataType.BOOLEAN, //UNIX
+        movieId:{
+          type:DataType.INTEGER,
+          references:{
+            model:'Movie',
+            key:'id'
+          },
+        },
+        row:DataType.INTEGER,
+        column:DataType.INTEGER
+      })
+      queryInterface.createTable('show', {
+        id: {
+          type: 'integer',
+          primaryKey: true,
+          autoIncrement: true,
+        },
+        name:DataType.STRING,
+        isBooked:DataType.BOOLEAN, //UNIX
+        movieId:{
+          type:DataType.INTEGER,
+          references:{
+            model:'Movie',
+            key:'id'
+          },
+        },
+        showRoomId:{
+          type:DataType.INTEGER,
+          references:{
+            model:'ShowRoom',
+            key:'id'
+          },
+        },
+        seatingId:{
+          type:DataType.INTEGER,
+          references:{
+            model:'seating',
+            key:'id'
+          },
+        },
+      })
+
+    // ]);
+    // throw new Error('TODO: implement migration in task 4');
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

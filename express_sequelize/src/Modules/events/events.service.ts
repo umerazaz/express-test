@@ -182,12 +182,12 @@ export class EventsService {
         }},
         raw:true
       });
-      console.log(workShop)
+      // console.log(workShop)
       // if (!workShop || !workShop.length)
       id.workshops = workShop;
       
     }
-    console.log(eventIds)
+    // console.log(eventIds)
     return eventIds
     // throw new Error('TODO task 2');
   }
